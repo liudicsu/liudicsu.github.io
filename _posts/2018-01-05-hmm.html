@@ -1,0 +1,83 @@
+---
+layout:     post
+title:      "隐马尔可夫"
+subtitle:   "前向后向算法"
+date:       2015-02-01 12:00:00
+author:     "liudicsu"
+header-img: "img/post-bg-2015.jpg"
+tags:
+    - 机器学习
+    - 隐马尔可夫
+    - 统计学习方法
+---
+
+<script type="text/javascript"
+ src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+本文主要讲前向算法与后向算法的推导<br>
+本文的公式符号来自《统计学习方法》第十章 李航著<br>
+符号说明：<br>
+Q是所有能的状态集合，V是所有可能的观测集合
+$$Q=\{q_1 , q_2 ,q_3,...,q_N\}   V=\{v_1,v2,...,v_M\}$$
+其中N是可能状态的个数，O是对应观测序列
+$$I=(i_1 , i_2 , ... ,i_T )    O=(o_1 , o_2 ,..., o_T )$$
+A是状态转移概率举证
+$$A=\left[a_{ij}\right]_{N\times N}$$
+其中
+$$a_{ij} = P(i_{t+1}=q_{j}|i_{t}=q_{i}),  i = 1,2,...,N; j= 1,2,...,N$$
+是在时刻t处于状态\(q_i\)的条件下在时刻\(t+1\)转移到状态\(q_j\)的概率。
+B是观测概率矩阵：
+$$B=\left[b_{j}(k)\right]_{N\times M}$$
+其中
+$$b_{j}(k)=P(o_{t} = v_{k}|i_{t}=q_{j}), k=1,2,...,N;j=1,2,...N$$
+是时刻t处于状态\(q_j\)条件下生成观测\(v_k\)的概率。
+\(\pi\)是初始状态概率向量：
+\(\pi=(\pi_{i})\)其中$$\pi_{i}=P(i_{1}=q_{i})， i=1,2,...,N$$
+是时刻\(t=1\)处于状态\(q_i\)的概率
+隐马尔可夫模型\(\lambda\)由\(A, B, \pi\)三个要素组成：
+$$\lambda = (A, B,\pi)$$
+
+符号什么的介绍完了现在不如正题：
+隐马尔可夫模型有基本问题之一：概率计算问题即求\(P(O|\lambda)\)的概率，使用算法：前向计算，后向计算
+前向算法：
+令：
+$$\alpha_{t}(i) = P(o_{1},o_{2},...,o_{t},i_{t}=q_{i}|\lambda)$$
+(1)初值
+$$\alpha_{1}(i)=\pi_{i}b_{i}(o_{1}), i=1,2,...,N $$
+(2)递推 对t=1,2,....,T-1,
+$$\alpha_{t+1}(i)=\left[\sum_{j=1}^{N}\alpha_{t}(j)\alpha_{ji}\right]b_{i}(o_{t+1}), i =1,2,...,N$$
+推导如下:
+$$
+            \begin{align}
+                \alpha_{t+1}(i) &= \sum_{j=1}^{N}P(o_{1},o_{2},...,o_{t},o_{t+1},i_{t}=q_{j},i_{t+1}=q_{i}|\lambda)  \\
+                								&= \sum_{j=1}^{N}\left[P(o_{1},o_{2},...,o_{t},i_{t}=q_{j}|\lambda)P(i_{t+1}=q_{i},o_{t+1}|i_{t}=q_{j},\lambda)\right]  \\
+                								&= \sum_{j=1}^{N}\left[\alpha_{t}(j)P(i_{t+1}=q_{i}|i_{t}=q_{j},\lambda)P(o_{t+1}|i_{t+1}=q_{i},\lambda)\right]  \\
+                								&= \sum_{j=1}^{N}\left[\alpha_{t}(j)a_{ji}b_i(o_{t+1})\right]  \\
+																&= \sum_{j=1}^{N}\left[\alpha_{t}(j)a_{ji}\right]b_i(o_{t+1})
+            \end{align}
+$$
+上面的推导用到了隐马尔可夫的性质，观测量只与对应的状态有关。
+以及贝叶斯网络中的全联合概率公式：$$P(x_i , ..., x_n )=\prod_{i=1}^{n}P(x_i |parents(x_i ))$$
+
+(3)终止
+$$P(O|lambda)=\sum_{i=1}^{N}\alpha_{T}(i)$$
+
+后向计算：
+令：
+$$\beta_{t}(i)=P(o_{t+1},o_{t+2},...,o_{T}|i_{t}=q_i ,\lambda)$$
+(1)$$\beta_{T}(i)=1, i =1,2,...,N$$
+(2)对于t=T-1,T-2,...,1
+$$\beta_{t}(i)=\sum_{j=1}^{N}a_{ij}b_{j}(o_{t+1})\beta_{t+1}(j), i =1,2,...,N$$
+公式推导:
+$$
+            \begin{align}
+                \beta_{t}(i)&=\sum_{j=1}^{N}P(o_{t+1},o_{t+2},...,o_{T},i_(t+1)=q_j |i_{t}=q_i ,\lambda) \\
+                            &=\sum_{j=1}^{N}\left[P(o_{t+1},o_{t+2},...,o_{T}|i_(t+1)=q_j ,\lambda)P(i_(t+1)=q_j|i_{t}=q_i ,\lambda)\right] \\
+                            &=\sum_{j=1}^{N}\left[P(o_{t+2},...,o_{T}|i_(t+1)=q_j ,\lambda)P(o_{t+1}|i_(t+1)=q_j ,\lambda)P(i_(t+1)=q_j|i_{t}=q_i ,\lambda)\right] \\
+                            &=\sum_{j=1}^{N}\left[\beta_{t+1}(j)b_{j}(o_{t+1})a_{ij}\right]
+                            
+            \end{align}
+$$
+(3)
+$$P(O|\lambda)=\sum_{i=1}^{N}\pi_{i}b_{i}(o_{1})\beta_{1}(i)$$
