@@ -76,6 +76,25 @@ layout: default
                 <!-- 多说 Share end-->
                 {% endif %}
 
+                <!-- github issue 评论-->
+                {% if site.github_com %}
+                    <div id="container"></div>
+                    <link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+                    <script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+                    <script>
+                        var gitment = new Gitment({
+                            //id: "", // 可选。默认为 location.href
+                            owner: 'liudicsu',
+                            repo: 'liudicsu.github.io',
+                            oauth: {
+                                client_id: '7835ececc05ee93aaa24',
+                                client_secret: '196faab46587e9d546ef6a3a1c6cd206e3653db2',
+                            },
+                        })
+                        gitment.render('container')
+                    </script>
+                {% endif %}
+                <!-- github issue 评论结束-->
 
                 <ul class="pager">
                     {% if page.previous.url %}
