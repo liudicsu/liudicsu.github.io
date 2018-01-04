@@ -62,10 +62,10 @@ github_com: true
 
 # Analytics settings
 # Baidu Analytics
-#ba_track_id: 4cc1f2d8f3067386cc5cdb626a202900
+ba_track_id: 9d287a964b6d9500aedd5c79830f3a5b
 # Google Analytics
-#ga_track_id: 'UA-49627206-1'            # Format: UA-xxxxxx-xx
-#ga_domain: huangxuan.me
+ga_track_id: 'UA-51701375-2'            # Format: UA-xxxxxx-xx
+ga_domain: liudicsu.github.io
 
 
 
