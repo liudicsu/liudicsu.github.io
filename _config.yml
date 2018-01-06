@@ -83,9 +83,9 @@ featured-condition-size: 1              # A tag will be featured if the size of 
 
 
 # Friends
-friends: [
-    {
-        title: "首页",
-        href: "#"
-    }
-]
+#friends: [
+#    {
+#        title: "首页",
+#        href: "#"
+#    }
+#]
